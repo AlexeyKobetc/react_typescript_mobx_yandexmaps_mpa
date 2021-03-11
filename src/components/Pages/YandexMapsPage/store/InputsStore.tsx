@@ -1,5 +1,5 @@
 import { computed, makeObservable, observable } from "mobx";
-import { inputs } from "./initComponent";
+import { inputs } from "../components/initComponent";
 
 export class InputsStore {
   inputs = inputs;

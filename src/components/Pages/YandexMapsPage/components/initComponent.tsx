@@ -1,4 +1,4 @@
-import { IInputs } from "./types";
+import { IButtons, IInputs } from "../components/types";
 
 export const inputs: IInputs = {
   inputSourceAddress: {
@@ -64,5 +64,16 @@ export const inputs: IInputs = {
     maxLen: 250,
     regEx: [/^[\u0400-\u04FFa-zA-Z0-9.,?!\-\n\r ]+$/],
     isYandex: false
+  }
+};
+
+export const buttons: IButtons = {
+  ok: {
+    labelText: "Заказать",
+    disabled: false
+  },
+  help: {
+    labelText: "Инструкция",
+    disabled: false
   }
 };

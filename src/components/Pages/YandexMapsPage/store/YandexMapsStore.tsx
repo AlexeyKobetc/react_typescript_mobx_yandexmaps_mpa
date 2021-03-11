@@ -7,8 +7,8 @@ import {
   coordsToAddressCodding,
   adressToCoordsCodding,
   clearInitTimer
-} from "./functions";
-import { ICars, IGeoMarker, IYMData, EYmData, ICoordinates, IAddress, IPosition } from "./types";
+} from "../components/functions";
+import { ICars, IGeoMarker, IYMData, EYmData, ICoordinates, IAddress, IPosition } from "../components/types";
 
 declare var ymaps: any;
 
@@ -114,6 +114,10 @@ export class YandexMapsStore {
       : this.getymData.defaultPosition.address;
   }
 
+  get getIsYmReady() {
+    return this.isYmReady;
+  }
+
   setYmDiv = (ymContainer: HTMLDivElement) => {
     if (ymContainer) this.ymDiv = ymContainer;
   };
@@ -136,6 +140,7 @@ export class YandexMapsStore {
       isGeolocationTrySetCurrentPosition: observable,
 
       getymData: computed,
+      getIsYmReady: computed,
       getCurrentAddress: computed,
       getCurrentCoordinates: computed,
       getDestinationAddress: computed,
@@ -258,6 +263,7 @@ export class YandexMapsStore {
 
         this.isUserCoordinatesExist && this.setPosition(EYmData.USER_POSITION);
         this.isDestinationCoordinatesExist && this.setPosition(EYmData.DESTINATION_POSITION);
+
         this.ym.events.add("contextmenu", (ymEvent: any) => {
           const mapClickCoordinates: number[] = ymEvent.get("coords");
 

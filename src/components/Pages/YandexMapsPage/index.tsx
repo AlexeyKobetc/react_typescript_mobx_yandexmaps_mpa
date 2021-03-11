@@ -1,8 +1,11 @@
 import React, { useEffect, useRef } from "react";
 import { observer } from "mobx-react";
-import { useContextRootStore } from "../../../store/RootStore";
+
+import { useContextYandexMapsStore } from "./store/RootStore";
 
 import styles from "./index.module.css";
+import { OrderForm } from "./components/OrderForm";
+import { SubmitForm } from "./components/SubmitForm";
 
 const fadeOut = (root: HTMLDivElement) => {
   let loadingDiv = root.querySelector("div");
@@ -17,27 +20,37 @@ const fadeOut = (root: HTMLDivElement) => {
 };
 
 const YandexMapsPage = observer(() => {
-  const { yandexMapsStore } = useContextRootStore();
-  const { setYmDiv, isYmReady } = yandexMapsStore;
+  const { setYmDiv, getIsYmReady } = useContextYandexMapsStore();
+
   const yandexMapsDiv = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (yandexMapsDiv.current) {
       setYmDiv(yandexMapsDiv.current);
-      isYmReady && fadeOut(yandexMapsDiv.current);
+      getIsYmReady && fadeOut(yandexMapsDiv.current);
     }
   });
 
   return (
     <React.Fragment>
-      <div className="row border d-flex flex-column flex-wrap justify-content-center align-items-center border-danger">
-        <div className="col-12 col-sm-11 border border-danger">FORM</div>
-        <div className="col-12 d-flex flex-row flex-wrap justify-content-around align-items-center bg-dark text-light pt-1">
-          <h6>Левая клавиша мыши - установить маркер отправления</h6>
-          <h6>Правая клавиша мыши - установить маркер назначения</h6>
+      <div className="row d-flex justify-content-center align-items-center">
+        <div className="col-12 col-sm-11 mt-3 mb-3 ">
+          <OrderForm />
         </div>
+      </div>
+      <div className="row d-flex justify-content-center align-items-center">
+        <div className="col-12 d-flex flex-row flex-wrap justify-content-around align-items-center bg-dark text-light pt-1">
+          <h6>
+            <strong>Левая клавиша мыши</strong> - установить маркер отправления
+          </h6>
+          <h6>
+            <strong>Правая клавиша мыши</strong> - установить маркер назначения
+          </h6>
+        </div>
+      </div>
+      <div className="row d-flex justify-content-center align-items-center">
         <div
-          className="col-12 col-sm-11 border border-danger"
+          className="col-12 col-sm-11"
           style={{ position: "relative", minHeight: "60vh" }}
           ref={yandexMapsDiv}
         >
@@ -51,7 +64,19 @@ const YandexMapsPage = observer(() => {
             </div>
           </div>
         </div>
-        <div className="col-12 col-sm-11 border border-danger">SUBMIT</div>
+      </div>
+      <div className="row d-flex justify-content-center align-items-center">
+        <div className="col-12 d-flex flex-row flex-wrap justify-content-around align-items-center bg-dark text-light pt-1">
+          <h6>
+            <strong>Левая клавиша мыши</strong> - установить маркер отправления
+          </h6>
+          <h6>
+            <strong>Правая клавиша мыши</strong> - установить маркер назначения
+          </h6>
+        </div>
+      </div>
+      <div className="row d-flex flex-row justify-content-around align-items-center">
+        <SubmitForm />
       </div>
     </React.Fragment>
   );

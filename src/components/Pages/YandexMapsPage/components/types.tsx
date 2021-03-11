@@ -57,3 +57,12 @@ export interface IInput {
   regEx: RegExp[];
   isYandex: boolean;
 }
+
+export interface IButtons {
+  [name: string]: IButton;
+}
+
+export interface IButton {
+  labelText: string;
+  disabled: boolean;
+}
