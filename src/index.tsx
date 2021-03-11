@@ -5,7 +5,6 @@ import Footer from "./components/Footer";
 
 import Header from "./components/Header";
 import PageTemplate from "./components/PageTemplate";
-import getUUID from "./sharedcomponents/uuid";
 
 import { useContextRootStore } from "./store/RootStore";
 

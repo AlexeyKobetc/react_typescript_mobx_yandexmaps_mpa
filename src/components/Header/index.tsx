@@ -1,8 +1,6 @@
 import { observer } from "mobx-react";
 import { NavLink } from "react-router-dom";
 
-import getUUID from "../../sharedcomponents/uuid";
-
 import { useContextRootStore } from "../../store/RootStore";
 
 import styles from "./index.module.css";

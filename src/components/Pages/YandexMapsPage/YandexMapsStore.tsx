@@ -70,6 +70,19 @@ export class YandexMapsStore {
     return this.ymData;
   }
 
+  get isUserCoordinatesExist() {
+    return (
+      this.getymData.userPosition.coordinates.latitude && this.getymData.userPosition.coordinates.longitude
+    );
+  }
+
+  get isDestinationCoordinatesExist() {
+    return (
+      this.getymData.destinationPosition.coordinates.latitude &&
+      this.getymData.destinationPosition.coordinates.longitude
+    );
+  }
+
   get getCurrentCoordinates() {
     return this.getymData.userPosition.coordinates.latitude &&
       this.getymData.userPosition.coordinates.longitude
@@ -127,6 +140,9 @@ export class YandexMapsStore {
       getDestinationAddress: computed,
       getDestinationCoordinates: computed,
 
+      isUserCoordinatesExist: computed,
+      isDestinationCoordinatesExist: computed,
+
       setYmDiv: action,
       setYmData: action,
       setYmReady: action,
@@ -147,7 +163,7 @@ export class YandexMapsStore {
     reaction(
       () => this.ymData,
       () => {
-        console.log(JSON.stringify(this.getymData));
+        //console.log(JSON.stringify(this.getymData));
       }
     );
 
@@ -239,12 +255,10 @@ export class YandexMapsStore {
             this.setYmData(address, EYmData.USER_POSITION);
 
             this.setPosition(EYmData.USER_POSITION);
-
-            console.log(coordinates, address);
           });
 
-        isReinit && this.setPosition(EYmData.USER_POSITION);
-        isReinit && this.setPosition(EYmData.DESTINATION_POSITION);
+        this.isUserCoordinatesExist && this.setPosition(EYmData.USER_POSITION);
+        this.isDestinationCoordinatesExist && this.setPosition(EYmData.DESTINATION_POSITION);
 
         this.ym.events.add("click", (ymEvent: any) => {
           const mapClickCoordinates: number[] = ymEvent.get("coords");
