@@ -40,3 +40,20 @@ export enum EYmData {
   USER_POSITION = "userPosition",
   DESTINATION_POSITION = "destinationPosition"
 }
+
+export interface IInputs {
+  [name: string]: IInput;
+}
+
+export interface IInput {
+  textarea: boolean;
+  labelText: string;
+  placeHolder: string;
+  helpText: string;
+  errorLabel: string;
+  value: string;
+  isValid: boolean | null;
+  maxLen: number;
+  regEx: RegExp[];
+  isYandex: boolean;
+}

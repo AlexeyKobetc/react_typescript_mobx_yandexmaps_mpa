@@ -95,3 +95,8 @@ export function createMapMarker(
     }
   );
 }
+
+export function clearInitTimer(timer: NodeJS.Timeout) {
+  //console.log("STOP INIT.");
+  clearInterval(timer);
+}

@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
+import { YandexMapsStore } from "../components/Pages/YandexMapsPage/store/YandexMapsStore";
 import { AppStore } from "./AppStore";
-import { YandexMapsStore } from "../components/Pages/YandexMapsPage/YandexMapsStore";
 
 const contextRootStore = createContext({
   appStore: new AppStore(),

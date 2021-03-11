@@ -5,7 +5,8 @@ import {
   setUserPositionFromYandex,
   createMapMarker,
   coordsToAddressCodding,
-  adressToCoordsCodding
+  adressToCoordsCodding,
+  clearInitTimer
 } from "./functions";
 import { ICars, IGeoMarker, IYMData, EYmData, ICoordinates, IAddress, IPosition } from "./types";
 
@@ -153,7 +154,7 @@ export class YandexMapsStore {
     reaction(
       () => this.ymDiv,
       () => {
-        console.log("this.ymDiv: ", this.ymDiv);
+        //console.log("this.ymDiv: ", this.ymDiv);
         this.isYmReady &&
           this.ymDiv &&
           this.initYm(this.getCurrentCoordinates, this.ymCurrentMapZoom, this.ymDiv);
@@ -170,14 +171,14 @@ export class YandexMapsStore {
     reaction(
       () => this.isGeolocationTrySetCurrentPosition,
       () => {
-        console.log("this.isGeolocationTrySetCurrentPosition: ", this.isGeolocationTrySetCurrentPosition);
+        //console.log("this.isGeolocationTrySetCurrentPosition: ", this.isGeolocationTrySetCurrentPosition);
       }
     );
 
     reaction(
       () => this.isYmScriptLoad,
       () => {
-        console.log("this.isYmScriptLoad: ", this.isYmScriptLoad);
+        //console.log("this.isYmScriptLoad: ", this.isYmScriptLoad);
       }
     );
 
@@ -198,18 +199,13 @@ export class YandexMapsStore {
     );
 
     this.initTimer = setInterval(() => {
-      console.log("INITING ....");
+      //console.log("INITING ....");
       if (this.isYmScriptLoad && this.ymDiv && this.isGeolocationTrySetCurrentPosition) {
         this.initYm(this.getCurrentCoordinates, this.ymCurrentMapZoom, this.ymDiv);
 
-        this.clearInitTimer(this.initTimer as NodeJS.Timeout);
+        clearInitTimer(this.initTimer as NodeJS.Timeout);
       }
     }, 500);
-  };
-
-  clearInitTimer = (timer: NodeJS.Timeout) => {
-    console.log("STOP INIT.");
-    clearInterval(timer);
   };
 
   loadYmScript(scriptUrl: string) {
@@ -255,15 +251,26 @@ export class YandexMapsStore {
             this.setYmData(address, EYmData.USER_POSITION);
 
             this.setPosition(EYmData.USER_POSITION);
+
+            const { latitude, longitude } = this.getCurrentCoordinates;
+            this.ym.setCenter([latitude, longitude]);
           });
 
         this.isUserCoordinatesExist && this.setPosition(EYmData.USER_POSITION);
         this.isDestinationCoordinatesExist && this.setPosition(EYmData.DESTINATION_POSITION);
+        this.ym.events.add("contextmenu", (ymEvent: any) => {
+          const mapClickCoordinates: number[] = ymEvent.get("coords");
+
+          this.setPosition(EYmData.DESTINATION_POSITION, {
+            latitude: mapClickCoordinates[0],
+            longitude: mapClickCoordinates[1]
+          });
+        });
 
         this.ym.events.add("click", (ymEvent: any) => {
           const mapClickCoordinates: number[] = ymEvent.get("coords");
 
-          this.setPosition(EYmData.DESTINATION_POSITION, {
+          this.setPosition(EYmData.USER_POSITION, {
             latitude: mapClickCoordinates[0],
             longitude: mapClickCoordinates[1]
           });
@@ -328,7 +335,7 @@ export class YandexMapsStore {
       );
 
       this.ym.geoObjects.add(mapMarker.ymGeoMarker);
-      this.ym.setCenter([latitude, longitude]);
+      //this.ym.setCenter([latitude, longitude]);
 
       mapMarker.ymGeoMarker.events.add("dragend", (ymEvent: any) => {
         const target: any = ymEvent.get("target");
@@ -351,7 +358,7 @@ export class YandexMapsStore {
         mapMarker.labelTextHeader + markerAddress.shortAddress
       );
       mapMarker.ymGeoMarker.properties.set("hintContent", markerAddress.fullAddress);
-      this.ym.setCenter([latitude, longitude]);
+      //this.ym.setCenter([latitude, longitude]);
     }
   };
 
