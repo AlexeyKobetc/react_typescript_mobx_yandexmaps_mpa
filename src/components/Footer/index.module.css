@@ -1,0 +1,29 @@
+.nav_bar {
+  min-height: calc((1.375rem + 1.5vw) * 2);
+}
+
+.nav_link {
+  transition-property: all;
+  transition-duration: 0.5s;
+}
+
+.nav_item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  cursor: pointer;
+
+  color: #6c757d;
+
+  transition-property: all;
+  transition-duration: 0.5s;
+}
+
+.nav_item:hover {
+  color: #f8f9fa;
+}
+
+.nav_item_active {
+  color: #f8f9fa;
+}
