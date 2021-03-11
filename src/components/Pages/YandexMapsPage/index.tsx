@@ -34,8 +34,20 @@ const YandexMapsPage = observer(() => {
   return (
     <React.Fragment>
       <div className="row d-flex justify-content-center align-items-center">
-        <div className="col-12 col-sm-11 mt-3 mb-3 ">
-          <OrderForm />
+        <div className="col-12 col-sm-11 mt-3 mb-3 d-grid">
+          <button
+            className="btn btn-outline-secondary"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#order"
+            aria-expanded="false"
+            aria-controls="collapseExample"
+          >
+            Раскрыть форму заказа
+          </button>
+          <div className="collapse" id="order">
+            <OrderForm />
+          </div>
         </div>
       </div>
       <div className="row d-flex justify-content-center align-items-center">
@@ -49,18 +61,34 @@ const YandexMapsPage = observer(() => {
         </div>
       </div>
       <div className="row d-flex justify-content-center align-items-center">
-        <div
-          className="col-12 col-sm-11"
-          style={{ position: "relative", minHeight: "60vh" }}
-          ref={yandexMapsDiv}
-        >
-          <div className={styles.loading}>
-            <div className="ps-4 pt-2">
-              <h1 className="text-secondary">Загружается карта ...</h1>
-            </div>
+        <div className="col-12 col-sm-11 mt-3 mb-3 d-grid">
+          <button
+            className="btn btn-outline-secondary"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#map"
+            aria-expanded="false"
+            aria-controls="collapseExample"
+          >
+            Раскрыть карту
+          </button>
+        </div>
+      </div>
+      <div className="row d-flex justify-content-center align-items-center">
+        <div className="collapse" id="map">
+          <div
+            className="col-12 col-sm-11"
+            style={{ position: "relative", minHeight: "80vh" }}
+            ref={yandexMapsDiv}
+          >
+            <div className={styles.loading}>
+              <div className="ps-4 pt-2">
+                <h1 className="text-secondary">Загружается карта ...</h1>
+              </div>
 
-            <div className="spinner-border text-secondary" role="status">
-              <span className="visually-hidden">Карта загружется ...</span>
+              <div className="spinner-border text-secondary" role="status">
+                <span className="visually-hidden">Карта загружется ...</span>
+              </div>
             </div>
           </div>
         </div>

@@ -5,7 +5,6 @@ export const Button = observer(({ name }: { name: string }) => {
   const { getButtons, buttonsHandler } = useContextYandexMapsStore();
   const { labelText, disabled } = getButtons[name];
 
-  console.log(labelText, disabled);
   return (
     <button
       disabled={disabled}
