@@ -55,7 +55,7 @@ export interface IInput {
   isValid: boolean | null;
   maxLen: number;
   regEx: RegExp[];
-  isYandex: boolean;
+  isYandex: string;
 }
 
 export interface IButtons {

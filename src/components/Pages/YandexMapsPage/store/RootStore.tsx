@@ -1,4 +1,4 @@
-import { computed, makeObservable } from "mobx";
+import { computed, makeObservable, reaction } from "mobx";
 import { createContext, useContext } from "react";
 import { ButtonsStore } from "./buttonsStore";
 import { InputsStore } from "./InputsStore";
@@ -13,6 +13,14 @@ class RootStore {
     return this.yandexMapsStore.isYmReady;
   }
 
+  get getCurrentAddress() {
+    return this.yandexMapsStore.getCurrentAddress;
+  }
+
+  get getDestinationAddress() {
+    return this.yandexMapsStore.getDestinationAddress;
+  }
+
   get getInputs() {
     return this.inputsStore.getInputs;
   }
@@ -25,12 +33,32 @@ class RootStore {
     makeObservable(this, {
       getInputs: computed,
       getButtons: computed,
-      getIsYmReady: computed
+      getIsYmReady: computed,
+      getCurrentAddress: computed,
+      getDestinationAddress: computed
     });
+
+    reaction(
+      () => this.getCurrentAddress,
+      () => {
+        this.inputsStore.setInputValue("inputSourceAddress", this.getCurrentAddress.fullAddress);
+      }
+    );
+
+    reaction(
+      () => this.getDestinationAddress,
+      () => {
+        this.inputsStore.setInputValue("inputDestinationAddress", this.getDestinationAddress.fullAddress);
+      }
+    );
   }
 
   setYmDiv = (ymContainer: HTMLDivElement) => {
     if (ymContainer) this.yandexMapsStore.setYmDiv(ymContainer);
+  };
+
+  setYmInputs = (inputName: string, inputRef: HTMLInputElement) => {
+    if (inputRef) this.yandexMapsStore.setYmInputs(inputName, inputRef);
   };
 
   buttonsHandler = (event: React.MouseEvent<HTMLButtonElement>) => {};
@@ -39,7 +67,7 @@ class RootStore {
     const { name, value } = currentTarget;
 
     if (type === "change") {
-      console.log(name, value);
+      this.inputsStore.setInputValue(name, value);
     }
   };
 }

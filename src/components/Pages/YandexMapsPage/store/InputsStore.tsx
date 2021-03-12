@@ -1,4 +1,4 @@
-import { computed, makeObservable, observable } from "mobx";
+import { action, computed, makeObservable, observable } from "mobx";
 import { inputs } from "../components/initComponent";
 
 export class InputsStore {
@@ -10,8 +10,18 @@ export class InputsStore {
   constructor() {
     makeObservable(this, {
       inputs: observable,
-
+      setInputValue: action,
       getInputs: computed
     });
   }
+
+  setInputValue = (inputName: string, value: string) => {
+    this.inputs = {
+      ...this.inputs,
+      [inputName]: {
+        ...this.inputs[inputName],
+        value
+      }
+    };
+  };
 }

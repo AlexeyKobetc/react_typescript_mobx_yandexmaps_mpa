@@ -49,12 +49,12 @@ const changeButtonLabel = (event: any) => {
 const YandexMapsPage = observer(() => {
   const { setYmDiv, getIsYmReady } = useContextYandexMapsStore();
 
-  const yandexMapsDiv = useRef<HTMLDivElement>(null);
+  const divRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (yandexMapsDiv.current) {
-      setYmDiv(yandexMapsDiv.current);
-      getIsYmReady && fadeOut(yandexMapsDiv.current);
+    if (divRef.current) {
+      setYmDiv(divRef.current);
+      getIsYmReady && fadeOut(divRef.current);
     }
     const orderDiv = document.querySelector("#orderDiv");
     const mapDiv = document.querySelector("#mapDiv");
@@ -119,11 +119,7 @@ const YandexMapsPage = observer(() => {
       </div>
       <div className="row d-flex justify-content-center align-items-center">
         <div className="collapse show" id="mapDiv">
-          <div
-            className="col-12 col-sm-11"
-            style={{ position: "relative", minHeight: "80vh" }}
-            ref={yandexMapsDiv}
-          >
+          <div className="col-12 col-sm-11" style={{ position: "relative", minHeight: "80vh" }} ref={divRef}>
             <div className={styles.loading}>
               <div className="ps-4 pt-2">
                 <h1 className="text-secondary">Загружается карта ...</h1>

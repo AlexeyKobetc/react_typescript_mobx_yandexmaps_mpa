@@ -11,7 +11,7 @@ export const inputs: IInputs = {
     isValid: null,
     maxLen: 250,
     regEx: [/^[\u0400-\u04FFa-zA-Z0-9.,\- ]+$/],
-    isYandex: true
+    isYandex: "source"
   },
   inputDestinationAddress: {
     textarea: false,
@@ -23,7 +23,7 @@ export const inputs: IInputs = {
     isValid: null,
     maxLen: 250,
     regEx: [/^[\u0400-\u04FFa-zA-Z0-9.,\- ]+$/],
-    isYandex: true
+    isYandex: "destination"
   },
   inputName: {
     textarea: false,
@@ -35,7 +35,7 @@ export const inputs: IInputs = {
     isValid: null,
     maxLen: 150,
     regEx: [/^[\u0400-\u04FF ]+$/],
-    isYandex: false
+    isYandex: ""
   },
   inputPhone: {
     textarea: false,
@@ -50,7 +50,7 @@ export const inputs: IInputs = {
       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
       /^((\+7|7|8)+([0-9]){10})$/
     ],
-    isYandex: false
+    isYandex: ""
   },
   inputComment: {
     textarea: true,
@@ -63,7 +63,7 @@ export const inputs: IInputs = {
     isValid: null,
     maxLen: 250,
     regEx: [/^[\u0400-\u04FFa-zA-Z0-9.,?!\-\n\r ]+$/],
-    isYandex: false
+    isYandex: ""
   }
 };
 

@@ -1,12 +1,11 @@
 import { action, computed, makeObservable, observable, reaction } from "mobx";
 import {
   ymScriptUrl,
-  setUserPositionFromGeolocation,
-  setUserPositionFromYandex,
   createMapMarker,
   coordsToAddressCodding,
   adressToCoordsCodding,
-  clearInitTimer
+  clearInitTimer,
+  getUserPosition
 } from "../components/functions";
 import { ICars, IGeoMarker, IYMData, EYmData, ICoordinates, IAddress, IPosition } from "../components/types";
 
@@ -15,6 +14,9 @@ declare var ymaps: any;
 export class YandexMapsStore {
   ym: any = null;
   ymDiv: HTMLDivElement | null = null;
+  ymInputs: {
+    [name: string]: { suggetView: any; ref: HTMLInputElement | null };
+  } = {};
   ymCurrentMapZoom: number = 15;
 
   ymData: IYMData = {
@@ -61,27 +63,13 @@ export class YandexMapsStore {
     labelTextHeader: "Вам нужно сюда: "
   };
 
-  isYmScriptLoad: boolean | null = null;
-  isYmReady: boolean | null = null;
-  isGeolocationTrySetCurrentPosition: boolean | null = null;
+  isYmScriptLoad: boolean = false;
+  isYmReady: boolean = false;
 
   initTimer: NodeJS.Timeout | null = null;
 
   get getymData() {
     return this.ymData;
-  }
-
-  get isUserCoordinatesExist() {
-    return (
-      this.getymData.userPosition.coordinates.latitude && this.getymData.userPosition.coordinates.longitude
-    );
-  }
-
-  get isDestinationCoordinatesExist() {
-    return (
-      this.getymData.destinationPosition.coordinates.latitude &&
-      this.getymData.destinationPosition.coordinates.longitude
-    );
   }
 
   get getCurrentCoordinates() {
@@ -118,8 +106,19 @@ export class YandexMapsStore {
     return this.isYmReady;
   }
 
+  get getYmInputs() {
+    return this.ymInputs;
+  }
+
   setYmDiv = (ymContainer: HTMLDivElement) => {
     if (ymContainer) this.ymDiv = ymContainer;
+  };
+
+  setYmInputs = (inputName: string, inputRef: HTMLInputElement) => {
+    this.ymInputs = {
+      ...this.ymInputs,
+      [inputName]: { ...this.ymInputs[inputName], ref: inputRef }
+    };
   };
 
   setYmReady = (isReady: boolean) => {
@@ -134,35 +133,33 @@ export class YandexMapsStore {
     makeObservable(this, {
       ym: observable,
       ymDiv: observable,
+      ymInputs: observable,
       ymData: observable,
       isYmScriptLoad: observable,
       isYmReady: observable,
-      isGeolocationTrySetCurrentPosition: observable,
 
       getymData: computed,
+      getYmInputs: computed,
       getIsYmReady: computed,
       getCurrentAddress: computed,
       getCurrentCoordinates: computed,
       getDestinationAddress: computed,
       getDestinationCoordinates: computed,
 
-      isUserCoordinatesExist: computed,
-      isDestinationCoordinatesExist: computed,
-
       setYmDiv: action,
+      setYmInputs: action,
       setYmData: action,
       setYmReady: action,
       setYmCurrentZoom: action,
-      loadYmScript: action
+      loadYmScript: action,
+      initAutoComplite: action
     });
 
     reaction(
       () => this.ymDiv,
       () => {
         //console.log("this.ymDiv: ", this.ymDiv);
-        this.isYmReady &&
-          this.ymDiv &&
-          this.initYm(this.getCurrentCoordinates, this.ymCurrentMapZoom, this.ymDiv);
+        this.isYmReady && this.ymDiv && this.initMap(this.ymCurrentMapZoom, this.ymDiv);
       }
     );
 
@@ -174,40 +171,128 @@ export class YandexMapsStore {
     );
 
     reaction(
-      () => this.isGeolocationTrySetCurrentPosition,
-      () => {
-        //console.log("this.isGeolocationTrySetCurrentPosition: ", this.isGeolocationTrySetCurrentPosition);
-      }
-    );
-
-    reaction(
       () => this.isYmScriptLoad,
       () => {
         //console.log("this.isYmScriptLoad: ", this.isYmScriptLoad);
       }
     );
 
-    this.initGeo();
+    this.initApi();
   }
 
-  initGeo = () => {
-    this.loadYmScript(ymScriptUrl);
+  mapHandler = (mapEvent: any) => {
+    const type = mapEvent.get("type");
 
-    setUserPositionFromGeolocation(
-      coordinates => {
-        const { latitude, longitude } = coordinates;
-        this.setYmData({ latitude, longitude }, EYmData.USER_POSITION);
-      },
-      () => {
-        this.isGeolocationTrySetCurrentPosition = true;
+    if (type === "contextmenu") {
+      const mapClickCoordinates: number[] = mapEvent.get("coords");
+      this.setPosition(EYmData.DESTINATION_POSITION, {
+        latitude: mapClickCoordinates[0],
+        longitude: mapClickCoordinates[1]
+      });
+    }
+    if (type === "click") {
+      const mapClickCoordinates: number[] = mapEvent.get("coords");
+      this.setPosition(EYmData.USER_POSITION, {
+        latitude: mapClickCoordinates[0],
+        longitude: mapClickCoordinates[1]
+      });
+    }
+    if (type === "boundschange") {
+      this.setYmCurrentZoom(mapEvent.get("newZoom"));
+    }
+  };
+
+  initAutoComplite = (inputsRefs: { [name: string]: { suggetView: any; ref: HTMLInputElement | null } }) => {
+    Object.keys(inputsRefs).forEach((inputName: string) => {
+      const inputRef = inputsRefs[inputName].ref;
+
+      if (inputRef) {
+        const suggetView = new ymaps.SuggestView(inputRef, {
+          results: 20,
+          offset: [0, 0],
+          provider: {
+            suggest: (request: string) => {
+              return new ymaps.suggest(
+                inputName === "inputSourceAddress"
+                  ? this.getCurrentAddress.region
+                  : this.getDestinationAddress.region + request
+              );
+            }
+          }
+        });
+        inputsRefs = {
+          ...inputsRefs,
+          [inputName]: { ...inputsRefs[inputName], suggetView }
+        };
       }
-    );
+    });
+  };
 
+  initMap = (mapZoom: number, mapDIVContainer: HTMLDivElement) => {
+    const getYm = (mapZoom: number, mapDIVContainer: HTMLDivElement) => {
+      return new ymaps.Map(mapDIVContainer, {
+        center: [this.getCurrentCoordinates.latitude, this.getCurrentCoordinates.longitude],
+        zoom: mapZoom,
+        controls: ["smallMapDefaultSet"]
+      });
+    };
+    if (!this.ym) {
+      console.log("GETTING USER POSITION (COORDINATES/ADDRESS).");
+      getUserPosition("yandex")
+        .then((position: any) => {
+          const coordinates: number[] = position.geoObjects.get(0).geometry.getCoordinates();
+          const { description, name, text } = position.geoObjects.get(0).properties.getAll();
+          console.log("GET USER POSITION (COORDINATES/ADDRESS).");
+
+          this.setYmData(
+            { latitude: coordinates[0], longitude: coordinates[1] },
+            { region: description, fullAddress: text, shortAddress: name },
+            EYmData.USER_POSITION
+          );
+        })
+        .then(() => {
+          this.ym = getYm(mapZoom, mapDIVContainer);
+        })
+        .then(() => {
+          this.setPosition(EYmData.USER_POSITION);
+
+          this.ym.events.add("contextmenu", this.mapHandler);
+          this.ym.events.add("click", this.mapHandler);
+          this.ym.events.add("boundschange", this.mapHandler);
+          console.log("MAP READY.");
+          this.setYmReady(true);
+        })
+        .catch((error: Error) => console.log(error.message));
+    } else {
+      this.ym.destroy();
+      this.ym = null;
+      this.setYmReady(false);
+
+      this.ym = this.ym = getYm(mapZoom, mapDIVContainer);
+
+      this.ymUserGeoMarker.ymGeoMarker && this.ym.geoObjects.add(this.ymUserGeoMarker.ymGeoMarker);
+      this.ymDestinationGeoMarker.ymGeoMarker &&
+        this.ym.geoObjects.add(this.ymDestinationGeoMarker.ymGeoMarker);
+
+      this.ym.events.add("contextmenu", this.mapHandler);
+      this.ym.events.add("click", this.mapHandler);
+      this.ym.events.add("boundschange", this.mapHandler);
+      console.log("MAP READY.");
+      this.setYmReady(true);
+    }
+  };
+
+  initApi = () => {
+    this.loadYmScript(ymScriptUrl);
     this.initTimer = setInterval(() => {
-      //console.log("INITING ....");
-      if (this.isYmScriptLoad && this.ymDiv && this.isGeolocationTrySetCurrentPosition) {
-        this.initYm(this.getCurrentCoordinates, this.ymCurrentMapZoom, this.ymDiv);
-
+      console.log("INITING ...");
+      if (this.isYmScriptLoad && this.ymDiv && Object.keys(this.ymInputs).length >= 2) {
+        ymaps.ready(() => {
+          console.log("ymaps READY.");
+          this.ymDiv && this.initMap(this.ymCurrentMapZoom, this.ymDiv);
+          //this.initAutoComplite(this.ymInputs);
+        });
+        console.log("STOP INIT.");
         clearInitTimer(this.initTimer as NodeJS.Timeout);
       }
     }, 500);
@@ -228,70 +313,6 @@ export class YandexMapsStore {
     };
   }
 
-  initYm = (mapCenterCoordinates: ICoordinates, mapZoom: number, mapDIVContainer: HTMLDivElement) => {
-    const { latitude, longitude } = mapCenterCoordinates;
-    const isReinit = this.ym !== null;
-
-    if (isReinit) {
-      this.ym.destroy();
-      this.ym = null;
-      this.ymUserGeoMarker.ymGeoMarker = null;
-      this.ymDestinationGeoMarker.ymGeoMarker = null;
-    }
-
-    ymaps
-      .ready()
-      .then(() => {
-        this.ym = new ymaps.Map(mapDIVContainer, {
-          center: [latitude, longitude],
-          zoom: mapZoom,
-          controls: ["smallMapDefaultSet"]
-        });
-      })
-      .then(() => {
-        this.setYmReady(true);
-        !isReinit &&
-          setUserPositionFromYandex((coordinates: ICoordinates, address: IAddress) => {
-            this.setYmData(coordinates, EYmData.USER_POSITION);
-            this.setYmData(address, EYmData.USER_POSITION);
-
-            this.setPosition(EYmData.USER_POSITION);
-
-            const { latitude, longitude } = this.getCurrentCoordinates;
-            this.ym.setCenter([latitude, longitude]);
-          });
-
-        this.isUserCoordinatesExist && this.setPosition(EYmData.USER_POSITION);
-        this.isDestinationCoordinatesExist && this.setPosition(EYmData.DESTINATION_POSITION);
-
-        this.ym.events.add("contextmenu", (ymEvent: any) => {
-          const mapClickCoordinates: number[] = ymEvent.get("coords");
-
-          this.setPosition(EYmData.DESTINATION_POSITION, {
-            latitude: mapClickCoordinates[0],
-            longitude: mapClickCoordinates[1]
-          });
-        });
-
-        this.ym.events.add("click", (ymEvent: any) => {
-          const mapClickCoordinates: number[] = ymEvent.get("coords");
-
-          this.setPosition(EYmData.USER_POSITION, {
-            latitude: mapClickCoordinates[0],
-            longitude: mapClickCoordinates[1]
-          });
-        });
-
-        this.ym.events.add("boundschange", (ymEvent: any) => {
-          this.setYmCurrentZoom(ymEvent.get("newZoom"));
-        });
-      })
-      .catch((error: Error) => {
-        this.setYmReady(false);
-        console.log(error.message);
-      });
-  };
-
   setPosition = (namePosition: EYmData, coordinates?: ICoordinates, address?: IAddress) => {
     if (!coordinates && !address) {
       this.drawMarker(namePosition);
@@ -299,8 +320,12 @@ export class YandexMapsStore {
       coordsToAddressCodding(coordinates)
         .then((address: any) => {
           const { description, name, text } = address;
-          this.setYmData(coordinates, namePosition);
-          this.setYmData({ region: description, fullAddress: text, shortAddress: name }, namePosition);
+          this.setYmData(
+            coordinates,
+            { region: description, fullAddress: text, shortAddress: name },
+            namePosition
+          );
+
           this.drawMarker(namePosition);
         })
         .catch((error: Error) => console.log(error.message));
@@ -312,9 +337,10 @@ export class YandexMapsStore {
               latitude: coordinates[0],
               longitude: coordinates[1]
             },
+            address,
             namePosition
           );
-          this.setYmData(address, namePosition);
+
           this.drawMarker(namePosition);
         })
         .catch((error: Error) => console.log(error.message));
@@ -368,20 +394,10 @@ export class YandexMapsStore {
     }
   };
 
-  setYmData = (data: ICoordinates | IAddress, namePosition: EYmData) => {
-    if ("latitude" in data && "longitude" in data) {
-      const { longitude, latitude } = data;
-      this.ymData = {
-        ...this.ymData,
-        [namePosition]: { ...this.ymData[namePosition], coordinates: { longitude, latitude } }
-      };
-    } else if ("region" in data && "fullAddress" in data && "shortAddress" in data) {
-      const { region, fullAddress, shortAddress } = data;
-
-      this.ymData = {
-        ...this.ymData,
-        [namePosition]: { ...this.ymData[namePosition], address: { region, fullAddress, shortAddress } }
-      };
-    }
+  setYmData = (coordinates: ICoordinates, address: IAddress, namePosition: EYmData) => {
+    this.ymData = {
+      ...this.ymData,
+      [namePosition]: { ...this.ymData[namePosition], coordinates, address }
+    };
   };
 }

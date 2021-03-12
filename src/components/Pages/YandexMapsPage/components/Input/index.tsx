@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 
 import { observer } from "mobx-react";
 import { useContextYandexMapsStore } from "../../store/RootStore";
 
 export const Input = observer(({ name }: { name: string }) => {
-  const { getInputs, inputsHandler } = useContextYandexMapsStore();
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const { getInputs, inputsHandler, setYmInputs } = useContextYandexMapsStore();
   const {
     textarea,
     labelText,
@@ -17,6 +19,13 @@ export const Input = observer(({ name }: { name: string }) => {
     regEx,
     isYandex
   } = getInputs[name];
+
+  useEffect(() => {
+    if (isYandex !== "" && inputRef.current) {
+      setYmInputs(name, inputRef.current);
+    }
+  });
+
   return (
     <div className="form-floating">
       {textarea ? (
@@ -47,6 +56,7 @@ export const Input = observer(({ name }: { name: string }) => {
           onFocus={inputsHandler}
           onBlur={inputsHandler}
           onChange={inputsHandler}
+          ref={inputRef}
         />
       )}
       <label htmlFor={name} className={`form-label ${isValid === false ? "text-danger" : "text-secondary"}`}>
