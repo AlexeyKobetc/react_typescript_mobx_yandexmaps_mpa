@@ -9,9 +9,10 @@ export const inputs: IInputs = {
     errorLabel: "Уточните адрес",
     value: "",
     isValid: null,
+    isDisable: false,
     maxLen: 250,
     regEx: [/^[\u0400-\u04FFa-zA-Z0-9.,\- ]+$/],
-    isYandex: "source"
+    isYandex: true
   },
   inputDestinationAddress: {
     textarea: false,
@@ -21,9 +22,10 @@ export const inputs: IInputs = {
     errorLabel: "Уточните адрес",
     value: "",
     isValid: null,
+    isDisable: false,
     maxLen: 250,
     regEx: [/^[\u0400-\u04FFa-zA-Z0-9.,\- ]+$/],
-    isYandex: "destination"
+    isYandex: true
   },
   inputName: {
     textarea: false,
@@ -33,9 +35,10 @@ export const inputs: IInputs = {
     errorLabel: "Уточните имя",
     value: "",
     isValid: null,
+    isDisable: false,
     maxLen: 150,
     regEx: [/^[\u0400-\u04FF ]+$/],
-    isYandex: ""
+    isYandex: false
   },
   inputPhone: {
     textarea: false,
@@ -45,12 +48,13 @@ export const inputs: IInputs = {
     errorLabel: "name@server.com или +7XXXXXXXXXX",
     value: "",
     isValid: null,
+    isDisable: false,
     maxLen: 50,
     regEx: [
       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
       /^((\+7|7|8)+([0-9]){10})$/
     ],
-    isYandex: ""
+    isYandex: false
   },
   inputComment: {
     textarea: true,
@@ -61,9 +65,10 @@ export const inputs: IInputs = {
       "  Комментарий может содержать только русские или латинские символы, цифры и знаки пунктуации.",
     value: "",
     isValid: null,
+    isDisable: false,
     maxLen: 250,
     regEx: [/^[\u0400-\u04FFa-zA-Z0-9.,?!\-\n\r ]+$/],
-    isYandex: ""
+    isYandex: false
   }
 };
 

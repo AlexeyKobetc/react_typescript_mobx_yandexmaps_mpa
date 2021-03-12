@@ -155,27 +155,27 @@ export class YandexMapsStore {
       initAutoComplite: action
     });
 
-    reaction(
-      () => this.ymDiv,
-      () => {
-        //console.log("this.ymDiv: ", this.ymDiv);
-        this.isYmReady && this.ymDiv && this.initMap(this.ymCurrentMapZoom, this.ymDiv);
-      }
-    );
+    // reaction(
+    //   () => this.ymDiv,
+    //   () => {
+    //     //console.log("this.ymDiv: ", this.ymDiv);
+    //     this.isYmReady && this.ymDiv && this.initMap(this.ymCurrentMapZoom, this.ymDiv);
+    //   }
+    // );
 
-    reaction(
-      () => this.ymData,
-      () => {
-        //console.log(JSON.stringify(this.getymData));
-      }
-    );
+    // reaction(
+    //   () => this.ymData,
+    //   () => {
+    //     //console.log(JSON.stringify(this.getymData));
+    //   }
+    // );
 
-    reaction(
-      () => this.isYmScriptLoad,
-      () => {
-        //console.log("this.isYmScriptLoad: ", this.isYmScriptLoad);
-      }
-    );
+    // reaction(
+    //   () => this.isYmScriptLoad,
+    //   () => {
+    //     //console.log("this.isYmScriptLoad: ", this.isYmScriptLoad);
+    //   }
+    // );
 
     this.initApi();
   }
@@ -283,6 +283,7 @@ export class YandexMapsStore {
   };
 
   initApi = () => {
+    this.setYmReady(false);
     this.loadYmScript(ymScriptUrl);
     this.initTimer = setInterval(() => {
       console.log("INITING ...");
@@ -314,7 +315,11 @@ export class YandexMapsStore {
   }
 
   setPosition = (namePosition: EYmData, coordinates?: ICoordinates, address?: IAddress) => {
-    if (!coordinates && !address) {
+    if (coordinates && address) {
+      this.setYmData(coordinates, address, namePosition);
+
+      this.drawMarker(namePosition);
+    } else if (!coordinates && !address) {
       this.drawMarker(namePosition);
     } else if (coordinates && !address) {
       coordsToAddressCodding(coordinates)

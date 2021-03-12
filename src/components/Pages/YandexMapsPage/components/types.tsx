@@ -53,9 +53,10 @@ export interface IInput {
   errorLabel: string;
   value: string;
   isValid: boolean | null;
+  isDisable: boolean;
   maxLen: number;
   regEx: RegExp[];
-  isYandex: string;
+  isYandex: boolean;
 }
 
 export interface IButtons {

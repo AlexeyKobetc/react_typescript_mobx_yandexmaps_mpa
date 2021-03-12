@@ -15,13 +15,14 @@ export const Input = observer(({ name }: { name: string }) => {
     errorLabel,
     value,
     isValid,
+    isDisable,
     maxLen,
     regEx,
     isYandex
   } = getInputs[name];
 
   useEffect(() => {
-    if (isYandex !== "" && inputRef.current) {
+    if (isYandex && inputRef.current) {
       setYmInputs(name, inputRef.current);
     }
   });
@@ -38,6 +39,7 @@ export const Input = observer(({ name }: { name: string }) => {
           id={name}
           name={name}
           placeholder={placeHolder}
+          disabled={isDisable}
           value={value}
           onFocus={inputsHandler}
           onBlur={inputsHandler}
@@ -52,6 +54,7 @@ export const Input = observer(({ name }: { name: string }) => {
           id={name}
           name={name}
           placeholder={placeHolder}
+          disabled={isDisable}
           value={value}
           onFocus={inputsHandler}
           onBlur={inputsHandler}

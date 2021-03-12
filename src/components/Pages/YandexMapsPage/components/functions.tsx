@@ -22,6 +22,10 @@ export async function getUserPosition<T>(provider: string = "yandex"): Promise<T
   return await location;
 }
 
+export async function checkAddress<T>(address: string, region: string): Promise<T> {
+  return (await ymaps.geocode(region + " " + address)) as Promise<T>;
+}
+
 export function createMapMarker(
   markerType: string,
   markerId: string,
@@ -51,6 +55,5 @@ export function createMapMarker(
 }
 
 export function clearInitTimer(timer: NodeJS.Timeout) {
-  //console.log("STOP INIT.");
   clearInterval(timer);
 }

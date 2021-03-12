@@ -24,4 +24,24 @@ export class InputsStore {
       }
     };
   };
+
+  setInputValid = (inputName: string, isValid: boolean | null) => {
+    this.inputs = {
+      ...this.inputs,
+      [inputName]: {
+        ...this.inputs[inputName],
+        isValid
+      }
+    };
+  };
+
+  setInputDisable = (inputName: string, isDisable: boolean) => {
+    this.inputs = {
+      ...this.inputs,
+      [inputName]: {
+        ...this.inputs[inputName],
+        isDisable
+      }
+    };
+  };
 }
