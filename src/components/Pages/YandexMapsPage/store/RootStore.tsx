@@ -71,7 +71,7 @@ class RootStore {
     this.setYmInputsDisable(true);
   }
 
-  setYmInputsDisable = (isDisable: boolean) => {
+  setYmInputsDisable = (isDisable: boolean): void => {
     Object.keys(this.getInputs).map((inputName: string) => {
       if (this.getInputs[inputName].isYandex) {
         this.inputsStore.setInputDisable(inputName, isDisable);
@@ -81,15 +81,15 @@ class RootStore {
     });
   };
 
-  setYmDiv = (ymContainer: HTMLDivElement) => {
+  setYmDiv = (ymContainer: HTMLDivElement): void => {
     if (ymContainer) this.yandexMapsStore.setYmDiv(ymContainer);
   };
 
-  setYmInputs = (inputName: string, inputRef: HTMLInputElement) => {
+  setYmInputs = (inputName: string, inputRef: HTMLInputElement): void => {
     if (inputRef) this.yandexMapsStore.setYmInputs(inputName, inputRef);
   };
 
-  checkValueAddress = (inputName: string, address: string, isBlur: boolean = false) => {
+  checkValueAddress = (inputName: string, address: string, isBlur: boolean = false): void => {
     let region =
       inputName === "inputSourceAddress" ? this.getCurrentAddress.region : this.getDestinationAddress.region;
     const namePosition =
@@ -124,10 +124,13 @@ class RootStore {
       .catch((error: Error) => console.log(error.message));
   };
 
-  buttonsHandler = (event: React.MouseEvent<HTMLButtonElement>) => {};
-  inputsHandler = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { type, currentTarget } = event;
-    const { name, value } = currentTarget;
+  buttonsHandler = (event: React.MouseEvent<HTMLButtonElement>): void => {};
+  inputsHandler = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
+    const {
+      type,
+      currentTarget: { name, value }
+    } = event;
+
     const { maxLen, regEx, isYandex } = this.getInputs[name];
 
     const isInputValueRegExpValid =

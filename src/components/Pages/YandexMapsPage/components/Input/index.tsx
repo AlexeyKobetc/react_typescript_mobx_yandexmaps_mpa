@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from "react";
 import { observer } from "mobx-react";
 import { useContextYandexMapsStore } from "../../store/RootStore";
 
-export const Input = observer(({ name }: { name: string }) => {
+export const Input: React.FC<{ name: string }> = observer(({ name }) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const { getInputs, inputsHandler, setYmInputs } = useContextYandexMapsStore();

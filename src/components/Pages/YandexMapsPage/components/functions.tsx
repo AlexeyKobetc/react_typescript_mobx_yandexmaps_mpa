@@ -33,7 +33,7 @@ export function createMapMarker(
   markerHoverContent: string = "",
   draggAble: boolean = true,
   coordinates: ICoordinates
-) {
+): void {
   const { latitude, longitude } = coordinates;
   return new ymaps.GeoObject(
     {
@@ -54,6 +54,6 @@ export function createMapMarker(
   );
 }
 
-export function clearInitTimer(timer: NodeJS.Timeout) {
+export function clearInitTimer(timer: NodeJS.Timeout): void {
   clearInterval(timer);
 }

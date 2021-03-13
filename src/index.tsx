@@ -9,8 +9,9 @@ import PageTemplate from "./components/PageTemplate";
 import { useContextRootStore } from "./store/RootStore";
 
 const App = () => {
-  const { appStore } = useContextRootStore();
-  const { getPages } = appStore;
+  const {
+    appStore: { getPages }
+  } = useContextRootStore();
 
   return (
     <React.Fragment>

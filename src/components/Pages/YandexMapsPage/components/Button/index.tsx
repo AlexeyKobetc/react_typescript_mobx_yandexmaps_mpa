@@ -1,7 +1,7 @@
 import { observer } from "mobx-react";
 import { useContextYandexMapsStore } from "../../store/RootStore";
 
-export const Button = observer(({ name }: { name: string }) => {
+export const Button: React.FC<{ name: string }> = observer(({ name }) => {
   const { getButtons, buttonsHandler } = useContextYandexMapsStore();
   const { labelText, disabled } = getButtons[name];
 

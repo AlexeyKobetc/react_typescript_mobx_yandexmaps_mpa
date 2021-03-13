@@ -7,7 +7,16 @@ import {
   clearInitTimer,
   getUserPosition
 } from "../components/functions";
-import { ICars, IGeoMarker, IYMData, EYmData, ICoordinates, IAddress, IPosition } from "../components/types";
+import {
+  ICars,
+  IGeoMarker,
+  IYMData,
+  EYmData,
+  ICoordinates,
+  IAddress,
+  IPosition,
+  IInputs
+} from "../components/types";
 
 declare var ymaps: any;
 
@@ -68,22 +77,22 @@ export class YandexMapsStore {
 
   initTimer: NodeJS.Timeout | null = null;
 
-  get getymData() {
+  get getymData(): IYMData {
     return this.ymData;
   }
 
-  get getDefaultAddress() {
+  get getDefaultAddress(): IAddress {
     return this.getymData.defaultPosition.address;
   }
 
-  get getCurrentCoordinates() {
+  get getCurrentCoordinates(): ICoordinates {
     return this.getymData.userPosition.coordinates.latitude &&
       this.getymData.userPosition.coordinates.longitude
       ? this.getymData.userPosition.coordinates
       : this.getymData.defaultPosition.coordinates;
   }
 
-  get getCurrentAddress() {
+  get getCurrentAddress(): IAddress {
     return this.getymData.userPosition.address.fullAddress &&
       this.getymData.userPosition.address.shortAddress &&
       this.getymData.userPosition.address.region
@@ -91,14 +100,14 @@ export class YandexMapsStore {
       : this.getymData.defaultPosition.address;
   }
 
-  get getDestinationCoordinates() {
+  get getDestinationCoordinates(): ICoordinates {
     return this.getymData.destinationPosition.coordinates.latitude &&
       this.getymData.destinationPosition.coordinates.longitude
       ? this.getymData.destinationPosition.coordinates
       : this.getymData.defaultPosition.coordinates;
   }
 
-  get getDestinationAddress() {
+  get getDestinationAddress(): IAddress {
     return this.getymData.destinationPosition.address.fullAddress &&
       this.getymData.destinationPosition.address.shortAddress &&
       this.getymData.destinationPosition.address.region
@@ -106,30 +115,30 @@ export class YandexMapsStore {
       : this.getymData.defaultPosition.address;
   }
 
-  get getIsYmReady() {
+  get getIsYmReady(): boolean {
     return this.isYmReady;
   }
 
-  get getYmInputs() {
+  get getYmInputs(): { [name: string]: { suggetView: any; ref: HTMLInputElement | null } } {
     return this.ymInputs;
   }
 
-  setYmDiv = (ymContainer: HTMLDivElement) => {
+  setYmDiv = (ymContainer: HTMLDivElement): void => {
     if (ymContainer) this.ymDiv = ymContainer;
   };
 
-  setYmInputs = (inputName: string, inputRef: HTMLInputElement) => {
+  setYmInputs = (inputName: string, inputRef: HTMLInputElement): void => {
     this.ymInputs = {
       ...this.ymInputs,
       [inputName]: { ...this.ymInputs[inputName], ref: inputRef }
     };
   };
 
-  setYmReady = (isReady: boolean) => {
+  setYmReady = (isReady: boolean): void => {
     this.isYmReady = isReady;
   };
 
-  setYmCurrentZoom = (newZoom: number) => {
+  setYmCurrentZoom = (newZoom: number): void => {
     this.ymCurrentMapZoom = newZoom;
   };
 
@@ -171,7 +180,7 @@ export class YandexMapsStore {
     this.initApi();
   }
 
-  mapHandler = (mapEvent: any) => {
+  mapHandler = (mapEvent: any): void => {
     const type = mapEvent.get("type");
 
     if (type === "contextmenu") {
@@ -193,7 +202,9 @@ export class YandexMapsStore {
     }
   };
 
-  initAutoComplite = (inputsRefs: { [name: string]: { suggetView: any; ref: HTMLInputElement | null } }) => {
+  initAutoComplite = (inputsRefs: {
+    [name: string]: { suggetView: any; ref: HTMLInputElement | null };
+  }): void => {
     Object.keys(inputsRefs).forEach((inputName: string) => {
       const inputRef = inputsRefs[inputName].ref;
 
@@ -219,7 +230,7 @@ export class YandexMapsStore {
     });
   };
 
-  initMap = (mapZoom: number, mapDIVContainer: HTMLDivElement) => {
+  initMap = (mapZoom: number, mapDIVContainer: HTMLDivElement): void => {
     const getYm = (mapZoom: number, mapDIVContainer: HTMLDivElement) => {
       return new ymaps.Map(mapDIVContainer, {
         center: [this.getCurrentCoordinates.latitude, this.getCurrentCoordinates.longitude],
@@ -274,7 +285,7 @@ export class YandexMapsStore {
     }
   };
 
-  initApi = () => {
+  initApi = (): void => {
     this.setYmReady(false);
     this.loadYmScript(ymScriptUrl);
     this.initTimer = setInterval(() => {
@@ -291,7 +302,7 @@ export class YandexMapsStore {
     }, 500);
   };
 
-  loadYmScript(scriptUrl: string) {
+  loadYmScript(scriptUrl: string): void {
     const script = document.createElement("script");
 
     script.src = scriptUrl;
@@ -306,10 +317,9 @@ export class YandexMapsStore {
     };
   }
 
-  setPosition = (namePosition: EYmData, coordinates?: ICoordinates, address?: IAddress) => {
+  setPosition = (namePosition: EYmData, coordinates?: ICoordinates, address?: IAddress): void => {
     if (coordinates && address) {
       this.setYmData(coordinates, address, namePosition);
-
       this.drawMarker(namePosition);
     } else if (!coordinates && !address) {
       this.drawMarker(namePosition);
@@ -344,7 +354,7 @@ export class YandexMapsStore {
     }
   };
 
-  drawMarker = (namePosition: EYmData) => {
+  drawMarker = (namePosition: EYmData): void => {
     let mapMarker: IGeoMarker =
       namePosition === EYmData.USER_POSITION ? this.ymUserGeoMarker : this.ymDestinationGeoMarker;
     let markerAddress: IAddress =
@@ -391,7 +401,7 @@ export class YandexMapsStore {
     }
   };
 
-  setYmData = (coordinates: ICoordinates, address: IAddress, namePosition: EYmData) => {
+  setYmData = (coordinates: ICoordinates, address: IAddress, namePosition: EYmData): void => {
     this.ymData = {
       ...this.ymData,
       [namePosition]: { ...this.ymData[namePosition], coordinates, address }
