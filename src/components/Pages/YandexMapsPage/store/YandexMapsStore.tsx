@@ -171,8 +171,7 @@ export class YandexMapsStore {
 
     reaction(
       () => this.ymDiv,
-      () => {
-        //console.log(this.ymDiv);
+      (): void => {
         this.isYmReady && this.ymDiv && this.initMap(this.ymCurrentMapZoom, this.ymDiv);
       }
     );

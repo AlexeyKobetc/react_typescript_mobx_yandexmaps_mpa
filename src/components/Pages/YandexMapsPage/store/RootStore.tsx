@@ -47,14 +47,14 @@ class RootStore {
 
     reaction(
       () => this.getIsYmReady,
-      () => {
+      (): void => {
         this.setYmInputsDisable(!this.getIsYmReady);
       }
     );
 
     reaction(
       () => this.getCurrentAddress,
-      () => {
+      (): void => {
         this.inputsStore.setInputValue("inputSourceAddress", this.getCurrentAddress.fullAddress);
         this.inputsStore.setInputValid("inputSourceAddress", true);
       }
@@ -62,7 +62,7 @@ class RootStore {
 
     reaction(
       () => this.getDestinationAddress,
-      () => {
+      (): void => {
         this.inputsStore.setInputValue("inputDestinationAddress", this.getDestinationAddress.fullAddress);
         this.inputsStore.setInputValid("inputDestinationAddress", true);
       }

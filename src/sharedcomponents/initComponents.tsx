@@ -1,5 +1,6 @@
 import AboutPage from "../components/Pages/AboutPage";
 import MainPage from "../components/Pages/MainPage";
+import MeteoPage from "../components/Pages/MeteoPage";
 import YandexMapsPage from "../components/Pages/YandexMapsPage";
 import { IPages } from "./types";
 
@@ -13,6 +14,13 @@ export const pages: IPages = {
   "Yandex Maps": {
     path: "/ymaps",
     component: YandexMapsPage,
+    isExact: false,
+    isActive: false
+  },
+
+  "Open Weather": {
+    path: "/meteo",
+    component: MeteoPage,
     isExact: false,
     isActive: false
   },
