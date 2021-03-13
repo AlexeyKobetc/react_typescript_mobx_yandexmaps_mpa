@@ -72,6 +72,10 @@ export class YandexMapsStore {
     return this.ymData;
   }
 
+  get getDefaultAddress() {
+    return this.getymData.defaultPosition.address;
+  }
+
   get getCurrentCoordinates() {
     return this.getymData.userPosition.coordinates.latitude &&
       this.getymData.userPosition.coordinates.longitude
@@ -141,6 +145,7 @@ export class YandexMapsStore {
       getymData: computed,
       getYmInputs: computed,
       getIsYmReady: computed,
+      getDefaultAddress: computed,
       getCurrentAddress: computed,
       getCurrentCoordinates: computed,
       getDestinationAddress: computed,
@@ -155,27 +160,13 @@ export class YandexMapsStore {
       initAutoComplite: action
     });
 
-    // reaction(
-    //   () => this.ymDiv,
-    //   () => {
-    //     //console.log("this.ymDiv: ", this.ymDiv);
-    //     this.isYmReady && this.ymDiv && this.initMap(this.ymCurrentMapZoom, this.ymDiv);
-    //   }
-    // );
-
-    // reaction(
-    //   () => this.ymData,
-    //   () => {
-    //     //console.log(JSON.stringify(this.getymData));
-    //   }
-    // );
-
-    // reaction(
-    //   () => this.isYmScriptLoad,
-    //   () => {
-    //     //console.log("this.isYmScriptLoad: ", this.isYmScriptLoad);
-    //   }
-    // );
+    reaction(
+      () => this.ymDiv,
+      () => {
+        //console.log(this.ymDiv);
+        this.isYmReady && this.ymDiv && this.initMap(this.ymCurrentMapZoom, this.ymDiv);
+      }
+    );
 
     this.initApi();
   }
@@ -233,7 +224,8 @@ export class YandexMapsStore {
       return new ymaps.Map(mapDIVContainer, {
         center: [this.getCurrentCoordinates.latitude, this.getCurrentCoordinates.longitude],
         zoom: mapZoom,
-        controls: ["smallMapDefaultSet"]
+        controls: ["smallMapDefaultSet"],
+        autoFitToViewport: "always"
       });
     };
     if (!this.ym) {

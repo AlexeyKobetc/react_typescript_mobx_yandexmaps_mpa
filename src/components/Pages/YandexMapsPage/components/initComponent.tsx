@@ -10,7 +10,7 @@ export const inputs: IInputs = {
     value: "",
     isValid: null,
     isDisable: false,
-    maxLen: 250,
+    maxLen: 150,
     regEx: [/^[\u0400-\u04FFa-zA-Z0-9.,\- ]+$/],
     isYandex: true
   },
@@ -23,7 +23,7 @@ export const inputs: IInputs = {
     value: "",
     isValid: null,
     isDisable: false,
-    maxLen: 250,
+    maxLen: 150,
     regEx: [/^[\u0400-\u04FFa-zA-Z0-9.,\- ]+$/],
     isYandex: true
   },
@@ -36,7 +36,7 @@ export const inputs: IInputs = {
     value: "",
     isValid: null,
     isDisable: false,
-    maxLen: 150,
+    maxLen: 50,
     regEx: [/^[\u0400-\u04FF ]+$/],
     isYandex: false
   },

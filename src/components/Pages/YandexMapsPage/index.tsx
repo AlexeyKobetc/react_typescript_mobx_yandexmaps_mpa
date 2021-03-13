@@ -27,6 +27,7 @@ const changeButtonLabel = (event: any) => {
   if (type === "shown.bs.collapse") {
     if (id === "orderDiv") {
       const orderButton = document.querySelector("#orderButton");
+
       if (orderButton) orderButton.textContent = `unfold_less`;
     }
     if (id === "mapDiv") {
@@ -37,6 +38,7 @@ const changeButtonLabel = (event: any) => {
   if (type === "hidden.bs.collapse") {
     if (id === "orderDiv") {
       const orderButton = document.querySelector("#orderButton");
+
       if (orderButton) orderButton.textContent = `unfold_more`;
     }
     if (id === "mapDiv") {
@@ -45,6 +47,33 @@ const changeButtonLabel = (event: any) => {
     }
   }
 };
+
+const collapseButton = (idButton: string, idCollapseChild: string) => (
+  <span
+    className="btn btn-outline-secondary btn-sm material-icons"
+    style={{ width: "2rem" }}
+    id={idButton}
+    data-bs-toggle="collapse"
+    data-bs-target={`#${idCollapseChild}`}
+    aria-expanded="false"
+    aria-controls="collapseExample"
+  >
+    unfold_less
+  </span>
+);
+
+const helpRow = () => (
+  <div className="row d-flex justify-content-center align-items-center">
+    <div className="col-12 d-flex flex-row flex-wrap justify-content-around align-items-center bg-dark text-light pt-1">
+      <h6>
+        <strong>Левая клавиша мыши</strong> - установить маркер отправления
+      </h6>
+      <h6>
+        <strong>Правая клавиша мыши</strong> - установить маркер назначения
+      </h6>
+    </div>
+  </div>
+);
 
 const YandexMapsPage = observer(() => {
   const { setYmDiv, getIsYmReady } = useContextYandexMapsStore();
@@ -75,51 +104,19 @@ const YandexMapsPage = observer(() => {
     <React.Fragment>
       <div className="row d-flex justify-content-center align-items-center">
         <div className="col-12 col-sm-11 mt-3 mb-3">
-          <span
-            className="btn btn-outline-secondary btn-sm material-icons"
-            style={{ width: "2rem" }}
-            id="orderButton"
-            data-bs-toggle="collapse"
-            data-bs-target="#orderDiv"
-            aria-expanded="false"
-            aria-controls="collapseExample"
-          >
-            unfold_less
-          </span>
-
+          {collapseButton("orderButton", "orderDiv")}
           <div className="collapse show" id="orderDiv">
             <OrderForm />
           </div>
         </div>
       </div>
+      {helpRow()}
       <div className="row d-flex justify-content-center align-items-center">
-        <div className="col-12 d-flex flex-row flex-wrap justify-content-around align-items-center bg-dark text-light pt-1">
-          <h6>
-            <strong>Левая клавиша мыши</strong> - установить маркер отправления
-          </h6>
-          <h6>
-            <strong>Правая клавиша мыши</strong> - установить маркер назначения
-          </h6>
-        </div>
+        <div className="col-12 col-sm-11 mt-3 mb-3 d-grid">{collapseButton("mapButton", "mapDiv")}</div>
       </div>
-      <div className="row d-flex justify-content-center align-items-center">
-        <div className="col-12 col-sm-11 mt-3 mb-3 d-grid">
-          <span
-            className="btn btn-outline-secondary btn-sm material-icons"
-            style={{ width: "2rem" }}
-            id="mapButton"
-            data-bs-toggle="collapse"
-            data-bs-target="#mapDiv"
-            aria-expanded="false"
-            aria-controls="collapseExample"
-          >
-            unfold_less
-          </span>
-        </div>
-      </div>
-      <div className="row d-flex justify-content-center align-items-center">
+      <div className="row">
         <div className="collapse show" id="mapDiv">
-          <div className="col-12 col-sm-11" style={{ position: "relative", minHeight: "80vh" }} ref={divRef}>
+          <div className="col-12" style={{ position: "relative", minHeight: "40vh" }} ref={divRef}>
             <div className={styles.loading}>
               <div className="ps-4 pt-2">
                 <h1 className="text-secondary">Загружается карта ...</h1>
@@ -132,16 +129,7 @@ const YandexMapsPage = observer(() => {
           </div>
         </div>
       </div>
-      <div className="row d-flex justify-content-center align-items-center">
-        <div className="col-12 d-flex flex-row flex-wrap justify-content-around align-items-center bg-dark text-light pt-1">
-          <h6>
-            <strong>Левая клавиша мыши</strong> - установить маркер отправления
-          </h6>
-          <h6>
-            <strong>Правая клавиша мыши</strong> - установить маркер назначения
-          </h6>
-        </div>
-      </div>
+      {helpRow()}
       <div className="row d-flex flex-row justify-content-around align-items-center">
         <SubmitForm />
       </div>

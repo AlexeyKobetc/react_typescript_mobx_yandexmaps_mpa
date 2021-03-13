@@ -23,6 +23,10 @@ class RootStore {
     return this.yandexMapsStore.getDestinationAddress;
   }
 
+  get getDefaultAddress() {
+    return this.yandexMapsStore.getDefaultAddress;
+  }
+
   get getInputs() {
     return this.inputsStore.getInputs;
   }
@@ -37,6 +41,7 @@ class RootStore {
       getButtons: computed,
       getIsYmReady: computed,
       getCurrentAddress: computed,
+      getDefaultAddress: computed,
       getDestinationAddress: computed
     });
 
@@ -84,11 +89,14 @@ class RootStore {
     if (inputRef) this.yandexMapsStore.setYmInputs(inputName, inputRef);
   };
 
-  checkValueAddress = (inputName: string, address: string) => {
-    const region =
+  checkValueAddress = (inputName: string, address: string, isBlur: boolean = false) => {
+    let region =
       inputName === "inputSourceAddress" ? this.getCurrentAddress.region : this.getDestinationAddress.region;
     const namePosition =
       inputName === "inputSourceAddress" ? EYmData.USER_POSITION : EYmData.DESTINATION_POSITION;
+
+    if (this.getDestinationAddress.region === this.getDefaultAddress.region)
+      region = this.getCurrentAddress.region;
 
     checkAddress(address, region)
       .then((geoData: any) => {
@@ -100,17 +108,17 @@ class RootStore {
         if (precision === "other") {
           this.inputsStore.setInputValid(inputName, false);
         } else {
-          this.inputsStore.setInputValue(inputName, text);
           this.inputsStore.setInputValid(inputName, true);
-
-          this.yandexMapsStore.setPosition(
-            namePosition,
-            {
-              latitude: coordinates[0],
-              longitude: coordinates[1]
-            },
-            { region: description, fullAddress: text, shortAddress: name }
-          );
+          isBlur && this.inputsStore.setInputValue(inputName, text);
+          isBlur &&
+            this.yandexMapsStore.setPosition(
+              namePosition,
+              {
+                latitude: coordinates[0],
+                longitude: coordinates[1]
+              },
+              { region: description, fullAddress: text, shortAddress: name }
+            );
         }
       })
       .catch((error: Error) => console.log(error.message));
@@ -120,10 +128,30 @@ class RootStore {
   inputsHandler = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { type, currentTarget } = event;
     const { name, value } = currentTarget;
+    const { maxLen, regEx, isYandex } = this.getInputs[name];
+
+    const isInputValueRegExpValid =
+      regEx?.reduce((isValid: boolean, reg: RegExp) => {
+        return isValid || reg.test(value.trim());
+      }, false) || false;
 
     if (type === "change") {
-      this.inputsStore.setInputValue(name, value);
-      this.checkValueAddress(name, value);
+      if (value.trim().length < (maxLen || 150)) {
+        if (isYandex) {
+          this.inputsStore.setInputValue(name, value);
+          this.checkValueAddress(name, value);
+        } else {
+          this.inputsStore.setInputValue(name, value);
+          this.inputsStore.setInputValid(name, isInputValueRegExpValid);
+        }
+      }
+    }
+
+    if (type === "blur") {
+      if (isYandex) {
+        this.inputsStore.setInputValue(name, value);
+        this.checkValueAddress(name, value, true);
+      }
     }
   };
 }
