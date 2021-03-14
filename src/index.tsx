@@ -1,38 +1,55 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { HashRouter as Router, Route, Switch, useLocation } from "react-router-dom";
+
 import Footer from "./components/Footer";
 
+import { useEffect, useState } from "react";
 import Header from "./components/Header";
 import PageTemplate from "./components/PageTemplate";
 
 import { useContextRootStore } from "./store/RootStore";
 
+const NoMatch = () => (
+  <div className="text-center mt-5 mb-5">
+    <h1>No Page</h1>
+  </div>
+);
+
 const App = () => {
   const {
-    appStore: { getPages }
+    appStore: { getPages, setActivePath }
   } = useContextRootStore();
+
+  const [currentPath, setCurrentPath] = useState(useLocation().pathname);
+
+  useEffect(() => {
+    setActivePath(currentPath);
+  }, []);
 
   return (
     <React.Fragment>
-      {Object.keys(getPages).map((pageName: string, index: number) => {
-        const { path, component, isExact } = getPages[pageName];
+      <Switch>
+        {Object.keys(getPages).map((pageName: string, index: number) => {
+          const { path, component, isExact } = getPages[pageName];
 
-        return <Route path={path} component={component} exact={isExact} key={`${pageName}_${index}`} />;
-      })}
+          return <Route path={path} component={component} exact={isExact} key={`${pageName}_${index}`} />;
+        })}
+        <Route component={NoMatch} />
+      </Switch>
     </React.Fragment>
   );
 };
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <PageTemplate>
+    <PageTemplate>
+      <Router>
         <Header />
         <App />
         <Footer />
-      </PageTemplate>
-    </BrowserRouter>
+      </Router>
+    </PageTemplate>
   </React.StrictMode>,
   document.getElementById("root")
 );
