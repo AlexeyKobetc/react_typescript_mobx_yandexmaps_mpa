@@ -21,7 +21,7 @@ const App = () => {
     appStore: { getPages, setActivePath }
   } = useContextRootStore();
 
-  const [currentPath, setCurrentPath] = useState(useLocation().pathname);
+  const [currentPath] = useState(useLocation().pathname);
 
   useEffect(() => {
     setActivePath(currentPath);

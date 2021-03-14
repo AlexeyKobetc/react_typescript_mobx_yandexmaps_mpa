@@ -5,15 +5,17 @@ declare var ymaps: any;
 export const ymScriptUrl =
   "https://api-maps.yandex.ru/2.1/?apikey=ba493d93-6641-43da-97fe-0d3f01ccf9b0&lang=ru_RU";
 
-export async function adressToCoordsCodding<T>(address: string): Promise<T> {
+export async function adressToCoordsCodding(address: string): Promise<number[]> {
   const responce = await ymaps.geocode(address);
-  return await (responce.geoObjects.get(0).geometry.getCoordinates() as Promise<T>);
+  return await responce.geoObjects.get(0).geometry.getCoordinates();
 }
 
-export async function coordsToAddressCodding<T>(coordinates: ICoordinates): Promise<T> {
+export async function coordsToAddressCodding<T>(
+  coordinates: ICoordinates
+): Promise<{ description: string; name: string; text: string }> {
   const { latitude, longitude } = coordinates;
   const responce = await ymaps.geocode([latitude, longitude]);
-  return await (responce.geoObjects.get(0).properties.getAll() as Promise<T>);
+  return await responce.geoObjects.get(0).properties.getAll();
 }
 
 export async function getUserPosition<T>(provider: string = "yandex"): Promise<T> {

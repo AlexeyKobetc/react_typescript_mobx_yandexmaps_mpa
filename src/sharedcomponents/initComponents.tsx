@@ -15,7 +15,7 @@ export const pages: IPages = {
     path: "/ymaps",
     component: YandexMapsPage,
     isExact: false,
-    isActive: false
+    isActive: true
   },
 
   "Open Weather": {

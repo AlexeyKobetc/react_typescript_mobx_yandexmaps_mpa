@@ -70,13 +70,13 @@ class MeteoStore {
 
   setCurrentMeteo = () => {
     getMeteo(currentMeteoUrl)
-      .then((currentMeteoData: ICurrentMeteoData) => {
+      .then(currentMeteoData => {
         const {
           cod,
           main: { temp },
           wind: { deg, speed },
           weather
-        } = currentMeteoData;
+        } = currentMeteoData as ICurrentMeteoData;
 
         const { description, icon } = weather[0];
 
@@ -101,8 +101,8 @@ class MeteoStore {
 
   setFiveDayMeteo = () => {
     getMeteo(fiveDayMeteoUrl)
-      .then((fiveDayMeteoData: IFiveDayMeteoData) => {
-        const { cod, list } = fiveDayMeteoData;
+      .then(fiveDayMeteoData => {
+        const { cod, list } = fiveDayMeteoData as IFiveDayMeteoData;
 
         if (cod === "200" && list.length) {
           this.fiveDayMeteo = list.filter(

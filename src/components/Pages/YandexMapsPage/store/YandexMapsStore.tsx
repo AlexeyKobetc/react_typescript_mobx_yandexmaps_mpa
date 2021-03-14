@@ -324,7 +324,7 @@ export class YandexMapsStore {
       this.drawMarker(namePosition);
     } else if (coordinates && !address) {
       coordsToAddressCodding(coordinates)
-        .then((address: any) => {
+        .then((address: { description: string; name: string; text: string }) => {
           const { description, name, text } = address;
           this.setYmData(
             coordinates,
@@ -337,7 +337,7 @@ export class YandexMapsStore {
         .catch((error: Error) => console.log(error.message));
     } else if (!coordinates && address) {
       adressToCoordsCodding(address.fullAddress)
-        .then((coordinates: any) => {
+        .then((coordinates: number[]) => {
           this.setYmData(
             {
               latitude: coordinates[0],

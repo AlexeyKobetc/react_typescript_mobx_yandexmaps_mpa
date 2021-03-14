@@ -3,8 +3,8 @@
 }
 
 .nav_link {
-  transition-property: all;
-  transition-duration: 0.5s;
+  color: #6c757d;
+  transition: color ease-in-out 0.2s;
 }
 
 .nav_item {
@@ -16,8 +16,7 @@
 
   color: #6c757d;
 
-  transition-property: all;
-  transition-duration: 0.5s;
+  transition: color ease-in-out 0.2s;
 }
 
 .nav_item:hover {
