@@ -1,5 +1,6 @@
 import { observer } from "mobx-react";
 import React from "react";
+import Loading from "../../../sharedcomponents/Loading";
 import { IComment, IPost } from "./components/types";
 import { useContextJsonPlaceHolderStore } from "./store/RootStore";
 
@@ -8,17 +9,7 @@ const JsonPlaceHolderPage = observer(() => {
   return (
     <React.Fragment>
       {!isPostsLoad ? (
-        <div className="row justify-content-center align-items-center">
-          <div className="col d-flex flex-column justify-content-center align-items-center m-4">
-            <div>
-              <h1 className="text-secondary">{`Загружаются посты с {JSON} Placeholder ...`}</h1>
-            </div>
-
-            <div className="spinner-border text-secondary m-4" role="status">
-              <span className="visually-hidden">{`Загружаются посты с {JSON} Placeholder ...`}</span>
-            </div>
-          </div>
-        </div>
+        <Loading text={`Загружаются посты с {JSON} Placeholder ...`} />
       ) : (
         <React.Fragment>
           <div className="row justify-content-center align-items-center">
@@ -51,7 +42,6 @@ const JsonPlaceHolderPage = observer(() => {
                     </div>
                     <div className="card-body">
                       <h5 className="card-title">{title}</h5>
-
                       <p className="card-text">{body}</p>
                     </div>
                     <h6 className="card-footer m-0">Комментарии:</h6>

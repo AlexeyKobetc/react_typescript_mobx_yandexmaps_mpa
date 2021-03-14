@@ -30,8 +30,10 @@ class JsonPlaceHolderStore {
   constructor() {
     makeObservable(this, {
       posts: observable,
+      postsLoadStatus: observable,
       getpostData: action,
-      getPosts: computed
+      getPosts: computed,
+      isPostsLoad: computed
     });
 
     this.getPortionPosts();
@@ -49,7 +51,7 @@ class JsonPlaceHolderStore {
 
   getNextPortionPosts = () => {
     this.prevCountFetchedPosts = this.currentCountFetchedPosts;
-    this.currentCountFetchedPosts += 10;
+    this.currentCountFetchedPosts += this.currentCountFetchedPosts;
     this.getPortionPosts();
   };
 

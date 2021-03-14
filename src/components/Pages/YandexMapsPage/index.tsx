@@ -6,6 +6,7 @@ import { useContextYandexMapsStore } from "./store/RootStore";
 import styles from "./index.module.css";
 import { OrderForm } from "./components/OrderForm";
 import { SubmitForm } from "./components/SubmitForm";
+import Loading from "../../../sharedcomponents/Loading";
 
 const fadeOut = (root: HTMLDivElement) => {
   let loadingDiv = root.querySelector("div");
@@ -118,13 +119,7 @@ const YandexMapsPage = observer(() => {
         <div className="collapse show" id="mapDiv">
           <div className="col-12" style={{ position: "relative", minHeight: "40vh" }} ref={divRef}>
             <div className={styles.loading}>
-              <div className="ps-4 pt-2">
-                <h1 className="text-secondary">Загружается карта ...</h1>
-              </div>
-
-              <div className="spinner-border text-secondary" role="status">
-                <span className="visually-hidden">Карта загружется ...</span>
-              </div>
+              <Loading text={`Загружается карта ...`} />
             </div>
           </div>
         </div>

@@ -1,5 +1,6 @@
 import { observer } from "mobx-react";
 import React, { useEffect } from "react";
+import Loading from "../../../sharedcomponents/Loading";
 import { IWeatherElement } from "./components/types";
 import { useContextMeteoStore } from "./store/RootStore";
 
@@ -25,17 +26,7 @@ const MeteoPage = observer(() => {
   return (
     <React.Fragment>
       {!getIsFiveDayMeteoLoad ? (
-        <div className="row justify-content-center align-items-center">
-          <div className="col d-flex flex-column justify-content-center align-items-center m-4">
-            <div>
-              <h1 className="text-secondary">Загружается прогноз погоды ...</h1>
-            </div>
-
-            <div className="spinner-border text-secondary m-4" role="status">
-              <span className="visually-hidden">Карта загружется ...</span>
-            </div>
-          </div>
-        </div>
+        <Loading text={`Загружается прогноз погоды ...`} />
       ) : (
         <div className="row justify-content-center align-items-center">
           <div className="col-12 col-sm-11 d-flex flex-column justify-content-center align-items-center mt-5">
