@@ -1,5 +1,5 @@
-import { action, computed, makeObservable, observable, reaction } from "mobx";
-import { currentMeteoUrl, fiveDayMeteoUrl, getMeteo } from "../components/functions";
+import { action, computed, makeObservable, observable } from "mobx";
+import { currentMeteoUrl, fiveDayMeteoUrl, getData } from "../components/functions";
 import { ICurrentMeteoData, ICurrentWeather, IFiveDayMeteoData, IWeatherElement } from "../components/types";
 
 class MeteoStore {
@@ -69,14 +69,14 @@ class MeteoStore {
   }
 
   setCurrentMeteo = () => {
-    getMeteo(currentMeteoUrl)
-      .then(currentMeteoData => {
+    getData(currentMeteoUrl)
+      .then((currentMeteoData: ICurrentMeteoData) => {
         const {
           cod,
           main: { temp },
           wind: { deg, speed },
           weather
-        } = currentMeteoData as ICurrentMeteoData;
+        } = currentMeteoData;
 
         const { description, icon } = weather[0];
 
@@ -100,9 +100,9 @@ class MeteoStore {
   };
 
   setFiveDayMeteo = () => {
-    getMeteo(fiveDayMeteoUrl)
-      .then(fiveDayMeteoData => {
-        const { cod, list } = fiveDayMeteoData as IFiveDayMeteoData;
+    getData(fiveDayMeteoUrl)
+      .then((fiveDayMeteoData: IFiveDayMeteoData) => {
+        const { cod, list } = fiveDayMeteoData;
 
         if (cod === "200" && list.length) {
           this.fiveDayMeteo = list.filter(

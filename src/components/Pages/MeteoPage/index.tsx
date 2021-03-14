@@ -78,7 +78,7 @@ const MeteoPage = observer(() => {
                     return (
                       <th scope="row" key={`${icon}_${index}`}>
                         <div className="d-flex flex-column justify-content-center align-items-center">
-                          <img src={"http://openweathermap.org/img/wn/" + icon + "@2x.png"} />
+                          <img src={"http://openweathermap.org/img/wn/" + icon + "@2x.png"} alt="icon" />
                         </div>
                       </th>
                     );

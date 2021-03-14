@@ -1,4 +1,5 @@
 import AboutPage from "../components/Pages/AboutPage";
+import JsonPlaceHolderPage from "../components/Pages/JsonPlaceHolderPage";
 import MainPage from "../components/Pages/MainPage";
 import MeteoPage from "../components/Pages/MeteoPage";
 import YandexMapsPage from "../components/Pages/YandexMapsPage";
@@ -15,12 +16,19 @@ export const pages: IPages = {
     path: "/ymaps",
     component: YandexMapsPage,
     isExact: false,
-    isActive: true
+    isActive: false
   },
 
   "Open Weather": {
     path: "/meteo",
     component: MeteoPage,
+    isExact: false,
+    isActive: false
+  },
+
+  "{JSON} Placeholder": {
+    path: "/json",
+    component: JsonPlaceHolderPage,
     isExact: false,
     isActive: false
   },

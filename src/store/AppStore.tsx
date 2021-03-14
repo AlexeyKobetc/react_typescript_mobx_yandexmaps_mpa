@@ -18,7 +18,7 @@ export class AppStore {
   }
 
   setActivePage = (activePageName: string) => {
-    Object.keys(this.getPages).map((pageName: string) => {
+    Object.keys(this.getPages).forEach((pageName: string) => {
       this.pages = {
         ...this.pages,
         [pageName]: {
@@ -30,7 +30,7 @@ export class AppStore {
   };
 
   setActivePath = (activePath: string) => {
-    Object.keys(this.getPages).map((pageName: string) => {
+    Object.keys(this.getPages).forEach((pageName: string) => {
       const path = this.pages[pageName].path;
       this.pages = {
         ...this.pages,

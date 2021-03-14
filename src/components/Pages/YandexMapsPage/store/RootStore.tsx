@@ -1,7 +1,7 @@
 import { computed, makeObservable, reaction } from "mobx";
 import { createContext, useContext } from "react";
 import { checkAddress } from "../components/functions";
-import { EYmData, IAddress, ICoordinates } from "../components/types";
+import { EYmData } from "../components/types";
 import { ButtonsStore } from "./buttonsStore";
 import { InputsStore } from "./InputsStore";
 import { YandexMapsStore } from "./YandexMapsStore";
@@ -72,7 +72,7 @@ class RootStore {
   }
 
   setYmInputsDisable = (isDisable: boolean): void => {
-    Object.keys(this.getInputs).map((inputName: string) => {
+    Object.keys(this.getInputs).forEach((inputName: string) => {
       if (this.getInputs[inputName].isYandex) {
         this.inputsStore.setInputDisable(inputName, isDisable);
         isDisable && this.inputsStore.setInputValue(inputName, "");

@@ -1,4 +1,4 @@
-import { IAddress, ICoordinates } from "./types";
+import { ICoordinates } from "./types";
 
 declare var ymaps: any;
 
@@ -10,7 +10,7 @@ export async function adressToCoordsCodding(address: string): Promise<number[]> 
   return await responce.geoObjects.get(0).geometry.getCoordinates();
 }
 
-export async function coordsToAddressCodding<T>(
+export async function coordsToAddressCodding(
   coordinates: ICoordinates
 ): Promise<{ description: string; name: string; text: string }> {
   const { latitude, longitude } = coordinates;

@@ -7,16 +7,7 @@ import {
   clearInitTimer,
   getUserPosition
 } from "../components/functions";
-import {
-  ICars,
-  IGeoMarker,
-  IYMData,
-  EYmData,
-  ICoordinates,
-  IAddress,
-  IPosition,
-  IInputs
-} from "../components/types";
+import { ICars, IGeoMarker, IYMData, EYmData, ICoordinates, IAddress } from "../components/types";
 
 declare var ymaps: any;
 
@@ -134,9 +125,9 @@ export class YandexMapsStore {
     };
   };
 
-  setYmReady = (isReady: boolean): void => {
+  set setYmReady(isReady: boolean) {
     this.isYmReady = isReady;
-  };
+  }
 
   setYmCurrentZoom = (newZoom: number): void => {
     this.ymCurrentMapZoom = newZoom;
@@ -163,7 +154,6 @@ export class YandexMapsStore {
       setYmDiv: action,
       setYmInputs: action,
       setYmData: action,
-      setYmReady: action,
       setYmCurrentZoom: action,
       loadYmScript: action,
       initAutoComplite: action
@@ -262,13 +252,13 @@ export class YandexMapsStore {
           this.ym.events.add("click", this.mapHandler);
           this.ym.events.add("boundschange", this.mapHandler);
           console.log("MAP READY.");
-          this.setYmReady(true);
+          this.setYmReady = true;
         })
         .catch((error: Error) => console.log(error.message));
     } else {
       this.ym.destroy();
       this.ym = null;
-      this.setYmReady(false);
+      this.setYmReady = false;
 
       this.ym = this.ym = getYm(mapZoom, mapDIVContainer);
 
@@ -280,12 +270,11 @@ export class YandexMapsStore {
       this.ym.events.add("click", this.mapHandler);
       this.ym.events.add("boundschange", this.mapHandler);
       console.log("MAP READY.");
-      this.setYmReady(true);
+      this.setYmReady = true;
     }
   };
 
   initApi = (): void => {
-    this.setYmReady(false);
     this.loadYmScript(ymScriptUrl);
     this.initTimer = setInterval(() => {
       console.log("INITING ...");

@@ -1,4 +1,4 @@
-import React, { Children, cloneElement, ComponentType, isValidElement, ReactNode } from "react";
+import React, { Children, cloneElement, isValidElement } from "react";
 
 const PageTemplate: React.FC<{}> = ({ children }) => (
   <div className="container-fluid p-0 m-0">

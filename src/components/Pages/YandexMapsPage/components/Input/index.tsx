@@ -7,19 +7,9 @@ export const Input: React.FC<{ name: string }> = observer(({ name }) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const { getInputs, inputsHandler, setYmInputs } = useContextYandexMapsStore();
-  const {
-    textarea,
-    labelText,
-    placeHolder,
-    helpText,
-    errorLabel,
-    value,
-    isValid,
-    isDisable,
-    maxLen,
-    regEx,
-    isYandex
-  } = getInputs[name];
+  const { textarea, labelText, placeHolder, errorLabel, value, isValid, isDisable, isYandex } = getInputs[
+    name
+  ];
 
   useEffect(() => {
     if (isYandex && inputRef.current) {
