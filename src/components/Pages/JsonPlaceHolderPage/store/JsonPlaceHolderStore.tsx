@@ -60,15 +60,14 @@ class JsonPlaceHolderStore {
       .then((post: IPost) => {
         const { id, userId } = post;
         this.postsLoadStatus.isPostsLoad = true;
-        getData(commentsUrl + "?postId=" + id)
+        return getData(commentsUrl + "?postId=" + id)
           .then((comments: IComment[]) => {
             this.postsLoadStatus.isCommentsLoad = true;
             post = { ...post, comments };
-            getData(usersUrl + "/" + userId)
+            return getData(usersUrl + "/" + userId)
               .then((user: IUser) => {
                 this.postsLoadStatus.isUsersLoad = true;
                 post = { ...post, user };
-
                 this.posts.push(post);
               })
               .catch((error: Error) => console.log(error.message));

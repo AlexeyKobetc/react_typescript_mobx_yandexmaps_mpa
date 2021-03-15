@@ -7,6 +7,7 @@ import {
   clearInitTimer,
   getUserPosition
 } from "../components/functions";
+import { initYmData, initYmDestinationGeoMarker, initYmUserGeoMarker } from "../components/initComponent";
 import { ICars, IGeoMarker, IYMData, EYmData, ICoordinates, IAddress } from "../components/types";
 
 declare var ymaps: any;
@@ -19,50 +20,13 @@ export class YandexMapsStore {
   } = {};
   ymCurrentMapZoom: number = 15;
 
-  ymData: IYMData = {
-    defaultPosition: {
-      coordinates: { latitude: 56.85, longitude: 60.65 },
-      address: {
-        region: "Россия, Свердловская область, Екатеринбург",
-        fullAddress:
-          "Россия, Свердловская область, Екатеринбург, Кировский район, микрорайон Втузгородок, Академическая улица, 16",
-        shortAddress: "Академическая улица, 16"
-      }
-    },
-    userPosition: {
-      coordinates: { longitude: 0, latitude: 0 },
-      address: {
-        region: "",
-        fullAddress: "",
-        shortAddress: ""
-      }
-    },
-    destinationPosition: {
-      coordinates: { longitude: 0, latitude: 0 },
-      address: {
-        region: "",
-        fullAddress: "",
-        shortAddress: ""
-      }
-    }
-  };
+  ymData: IYMData = initYmData;
 
   ymCars: ICars = {};
   ymCarsGeoCollection: any = null;
 
-  ymUserGeoMarker: IGeoMarker = {
-    ymGeoMarker: null,
-    icon: "islands#darkGreenStretchyIcon",
-    id: "userGeoMarker",
-    labelTextHeader: "Вы здесь: "
-  };
-  ymDestinationGeoMarker: IGeoMarker = {
-    ymGeoMarker: null,
-    icon: "islands#yellowStretchyIcon",
-    id: "destinationGeoMarker",
-    labelTextHeader: "Вам нужно сюда: "
-  };
-
+  ymUserGeoMarker: IGeoMarker = initYmUserGeoMarker;
+  ymDestinationGeoMarker: IGeoMarker = initYmDestinationGeoMarker;
   isYmScriptLoad: boolean = false;
   isYmReady: boolean = false;
 

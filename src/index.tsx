@@ -9,6 +9,7 @@ import Header from "./components/Header";
 import PageTemplate from "./components/PageTemplate";
 
 import { useContextRootStore } from "./store/RootStore";
+import { observer } from "mobx-react";
 
 const NoMatch = () => (
   <div className="text-center mt-5 mb-5">
@@ -16,7 +17,7 @@ const NoMatch = () => (
   </div>
 );
 
-const App = () => {
+const App = observer(() => {
   const {
     appStore: { getPages, setActivePath }
   } = useContextRootStore();
@@ -39,7 +40,7 @@ const App = () => {
       </Switch>
     </React.Fragment>
   );
-};
+});
 
 ReactDOM.render(
   <React.StrictMode>

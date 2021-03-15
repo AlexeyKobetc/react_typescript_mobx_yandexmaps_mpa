@@ -94,9 +94,7 @@ class MeteoStore {
           this.meteoLoadStatus.isCurrentMeteoLoad = false;
         }
       })
-      .catch((error: Error) => {
-        this.meteoLoadStatus.isCurrentMeteoLoad = false;
-      });
+      .catch((error: Error) => console.log(error.message));
   };
 
   setFiveDayMeteo = () => {
@@ -117,65 +115,8 @@ class MeteoStore {
           this.meteoLoadStatus.isFiveDayMeteoLoad = false;
         }
       })
-      .catch((error: Error) => {
-        this.meteoLoadStatus.isFiveDayMeteoLoad = false;
-      });
+      .catch((error: Error) => console.log(error.message));
   };
-
-  // fetchData = async (url: string) => {
-  //   let response = await fetch(url);
-
-  //   if (!response.ok) {
-  //     throw new Error(`Error response status: ${response.status}, URL: ${url}`);
-  //   }
-
-  //   let data = await response.json();
-  //   return data;
-  // };
-
-  // getCurrentMeteoData = async () => {
-  //   await this.fetchData(currentMeteoUrl)
-  //     .then((json: any) => {
-  //       runInAction(() => {
-  //         this.currentMeteoStore = json;
-  //         this.meteoLoadStatus = { ...this.meteoLoadStatus, isCurrentMeteoLoad: true };
-  //       });
-  //     })
-  //     .catch(error => {
-  //       runInAction(() => {
-  //         console.log(`Current Day Meteo Data Load Error: ${error.message}`);
-  //         this.meteoLoadStatus = {
-  //           ...this.meteoLoadStatus,
-  //           error: {
-  //             ...this.meteoLoadStatus.error,
-  //             currentDayMeteo: `Current Day Meteo Data Load Error: ${error.message}`
-  //           }
-  //         };
-  //       });
-  //     });
-  // };
-
-  // getFiveDayMeteoData = async () => {
-  //   await this.fetchData(fiveDayMeteoUrl)
-  //     .then((json: any) => {
-  //       runInAction(() => {
-  //         this.fiveDayMeteoStore = json;
-  //         this.meteoLoadStatus = { ...this.meteoLoadStatus, isFiveDayMeteoLoad: true };
-  //       });
-  //     })
-  //     .catch(error => {
-  //       runInAction(() => {
-  //         console.log(`Five Day Meteo Data Load Error: ${error.message}`);
-  //         this.meteoLoadStatus = {
-  //           ...this.meteoLoadStatus,
-  //           error: {
-  //             ...this.meteoLoadStatus.error,
-  //             fiveDayMeteo: `Five Day Meteo Data Load Error: ${error.message}`
-  //           }
-  //         };
-  //       });
-  //     });
-  // };
 }
 
 export default MeteoStore;

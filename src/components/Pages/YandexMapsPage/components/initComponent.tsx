@@ -82,3 +82,44 @@ export const buttons: IButtons = {
     disabled: false
   }
 };
+
+export const initYmData = {
+  defaultPosition: {
+    coordinates: { latitude: 56.85, longitude: 60.65 },
+    address: {
+      region: "Россия, Свердловская область, Екатеринбург",
+      fullAddress:
+        "Россия, Свердловская область, Екатеринбург, Кировский район, микрорайон Втузгородок, Академическая улица, 16",
+      shortAddress: "Академическая улица, 16"
+    }
+  },
+  userPosition: {
+    coordinates: { longitude: 0, latitude: 0 },
+    address: {
+      region: "",
+      fullAddress: "",
+      shortAddress: ""
+    }
+  },
+  destinationPosition: {
+    coordinates: { longitude: 0, latitude: 0 },
+    address: {
+      region: "",
+      fullAddress: "",
+      shortAddress: ""
+    }
+  }
+};
+
+export const initYmUserGeoMarker = {
+  ymGeoMarker: null,
+  icon: "islands#darkGreenStretchyIcon",
+  id: "userGeoMarker",
+  labelTextHeader: "Вы здесь: "
+};
+export const initYmDestinationGeoMarker = {
+  ymGeoMarker: null,
+  icon: "islands#yellowStretchyIcon",
+  id: "destinationGeoMarker",
+  labelTextHeader: "Вам нужно сюда: "
+};
